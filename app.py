@@ -33,9 +33,9 @@ def upload_file_to_s3(df, s3_bucket="s3-orq-t", format="csv"):
     Faz o upload de um arquivo local para um bucket S3.
 
     Args:
-        file_path (str): O caminho completo do arquivo local.
-        bucket_name (str): O nome do bucket S3.
-        s3_file_name (str): O nome desejado para o arquivo no S3.
+        df (pd.DataFrame): Dataframe que armazena os dados de retorno da API.
+        s3_bucket (str): O nome do bucket S3.
+        format (str): formato do arquivo final (Como padrão, utiliza-se o .csv).
     """
     date = datetime.datetime.now()
     if format == "parquet":
