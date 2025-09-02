@@ -5,6 +5,8 @@ import datetime
 import pyodbc
 from dotenv import load_dotenv
 import os
+from table_reader import get_table_names
+
 
 load_dotenv()
 
@@ -26,15 +28,15 @@ def get_sql_server_data(host, port, database, user, password, table_name):
 
     conn = pyodbc.connect(
         "DRIVER={ODBC Driver 18 for SQL Server};"
-        "SERVER=200.221.173.235,2018;"
-        "DATABASE=uniquechic;"
-        "UID=uniquechic;"
-        "PWD=8j%07*1T3y;"
+        f"SERVER={host},{port};"
+        f"DATABASE={database};"
+        f"UID={user};"
+        f"PWD={password};"
         "TrustServerCertificate=yes;"
         "Trusted_Connection=No;"
     )
 
-    query = f"SELECT * FROM dbo.{table_name}"
+    query = f"SELECT TOP 10 * FROM dbo.{table_name}"
     df = pd.read_sql(query, conn)
     conn.close()
     return df
@@ -42,51 +44,60 @@ def get_sql_server_data(host, port, database, user, password, table_name):
 
 def upload_file_to_s3(df, s3_bucket="s3-orq-t", format="csv", table_name="empty_table"):
     """
-    Faz o upload de um arquivo local para um bucket S3.
-
-    Args:
-        df (pd.DataFrame): Dataframe que armazena os dados de retorno da API.
-        s3_bucket (str): O nome do bucket S3.
-        format (str): formato do arquivo final (Como padrão, utiliza-se o .csv).
+    Faz o upload de um DataFrame para um bucket S3 com particionamento por ano/mês/dia.
     """
     date = datetime.datetime.now()
+
+    # Particionamento estilo Data Lake
+    partition_path = f"year={date.year}/month={date.month:02d}/day={date.day:02d}"
+
+    # Nome do arquivo com timestamp para evitar sobrescrita
+    file_timestamp = date.strftime("%Y%m%d_%H%M%S")
+
     if format == "parquet":
         out_path = "file.parquet"
         df.to_parquet(out_path, index=False)
-        s3_path = f"landing/{table_name}/{date.strftime("%Y-%m-%d")}/{table_name}{date}.parquet"
+        s3_path = f"bronze/{table_name}/{partition_path}/{table_name}_{file_timestamp}.parquet"
 
     elif format == "csv":
         out_path = "file.csv"
-        df.to_csv(out_path, index=False, encoding="utf-8")
+        df.to_csv(out_path, sep=";", index=False, encoding="utf-8")
         s3_path = (
-            f"landing/{table_name}/{date.strftime("%Y-%m-%d")}/{table_name}_{date}.csv"
+            f"bronze/{table_name}/{partition_path}/{table_name}_{file_timestamp}.csv"
         )
 
-    s3_bucket = "s3-orq-t"
+    else:
+        raise ValueError("Formato não suportado. Use 'csv' ou 'parquet'.")
 
     s3_client = boto3.client("s3")
+
     try:
         s3_client.upload_file(out_path, s3_bucket, s3_path)
-        print(f"Arquivo {out_path} enviado para s3://{s3_bucket}/{s3_path}")
+        print(f"✅ Arquivo {out_path} enviado para s3://{s3_bucket}/{s3_path}")
     except Exception as e:
-        print(f"Erro: {e}")
+        print(f"❌ Erro ao enviar para o S3: {e}")
 
 
+# Carregando variáveis de ambiente
 HOST = os.getenv("MSSQL_HOST")
 PORT = os.getenv("MSSQL_PORT")
 DATABASE = os.getenv("MSSQL_DATABASE")
 USER = os.getenv("MSSQL_USER")
 PASSWORD = os.getenv("MSSQL_PASSWORD")
 
+table_names = get_table_names(HOST, PORT, DATABASE, USER, PASSWORD)
 
-df = get_sql_server_data(
-    host=HOST,
-    port=PORT,
-    database=DATABASE,
-    user=USER,
-    password=PASSWORD,
-    table_name="LEITURAOTICAIT",
-)
+for table in table_names:
 
+    # Extraindo dados
+    df = get_sql_server_data(
+        host=HOST,
+        port=PORT,
+        database=DATABASE,
+        user=USER,
+        password=PASSWORD,
+        table_name=table,
+    )
 
-upload_file_to_s3(df, table_name="LEITURAOTICAIT", format="parquet")
+    # Enviando para o S3
+    upload_file_to_s3(df, table_name=table, format="csv")
