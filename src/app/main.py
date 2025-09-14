@@ -58,14 +58,22 @@ def upload_file_to_s3(
     file_timestamp = date.strftime("%Y%m%d_%H%M%S")
 
     if format == "parquet":
-        out_path = "src\\data\\file.parquet"
-        df.to_parquet(out_path, index=False)
-        s3_path = f"bronze/vesto/{table_name}/{partition_path}/{table_name}_{file_timestamp}.parquet"
+        try:
+            out_path = "src\\data\\file.parquet"
+            df.to_parquet(out_path, index=False)
+            s3_path = f"bronze/vesto/{table_name}/{partition_path}/{table_name}_{file_timestamp}.parquet"
+        except Exception as e:
+            print(f"Erro ao salvar Parquet: {e}")
+            pass
 
     elif format == "csv":
         out_path = "src\\data\\file.csv"
-        df.to_csv(out_path, sep=";", index=False, encoding="latin1")
-        s3_path = f"bronze/vesto/{table_name}/{partition_path}/{table_name}_{file_timestamp}.csv"
+        try:
+            df.to_csv(out_path, sep=";", index=False, encoding="latin1")
+            s3_path = f"bronze/vesto/{table_name}/{partition_path}/{table_name}_{file_timestamp}.csv"
+        except Exception as e:
+            print(f"Erro ao salvar CSV: {e}")
+            pass
 
     else:
         raise ValueError("Formato não suportado. Use 'csv' ou 'parquet'.")
@@ -77,6 +85,7 @@ def upload_file_to_s3(
         print(f"Arquivo {out_path} enviado para s3://{s3_bucket}/{s3_path}")
     except Exception as e:
         print(f"Erro ao enviar para o S3: {e}")
+        pass
 
 
 if __name__ == "__main__":
@@ -96,6 +105,7 @@ if __name__ == "__main__":
     for table in table_names:
 
         # Data extraction
+
         df = get_sql_server_data(
             host=HOST,
             port=PORT,
@@ -104,8 +114,7 @@ if __name__ == "__main__":
             password=PASSWORD,
             table_name=table,
         )
-
         # S3 upload - CSV or Parquet format
-        upload_file_to_s3(df, table_name=table, format="parquet")
+        upload_file_to_s3(df, table_name=table, format="csv")
 
     print("Processo de ingestão concluído.")
