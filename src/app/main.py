@@ -35,14 +35,19 @@ def get_sql_server_data(host, port, database, user, password, table_name):
 
     query = f"SELECT * FROM dbo.{table_name}"
     print(f"Extraindo dados da tabela: {table_name}... \n")
-    df = pd.read_sql(query, conn)
+    try:
+        df = pd.read_sql(query, conn)
+    except Exception as e:
+        print(f"Erro ao extrair dados da tabela {table_name}: {e}")
+        df = pd.DataFrame()  # Retorna um DataFrame vazio em caso de erro
+        pass
     conn.close()
     return df
 
 
 def upload_file_to_s3(
     df,
-    s3_bucket="s3-orq-t",
+    s3_bucket="dev-analytics-datamigration-bucket",
     format="csv",
     table_name="empty_table",
 ):
@@ -69,7 +74,7 @@ def upload_file_to_s3(
     elif format == "csv":
         out_path = "src\\data\\file.csv"
         try:
-            df.to_csv(out_path, sep=";", index=False, encoding="latin1")
+            df.to_csv(out_path, sep=";", index=False, encoding="utf-8")
             s3_path = f"bronze/vesto/{table_name}/{partition_path}/{table_name}_{file_timestamp}.csv"
         except Exception as e:
             print(f"Erro ao salvar CSV: {e}")
@@ -78,7 +83,13 @@ def upload_file_to_s3(
     else:
         raise ValueError("Formato não suportado. Use 'csv' ou 'parquet'.")
 
-    s3_client = boto3.client("s3")
+    session = boto3.Session(
+        aws_access_key_id=os.getenv("aws_access_key_id"),
+        aws_secret_access_key=os.getenv("aws_secret_access_key"),
+        aws_session_token=os.getenv("aws_session_token"),
+        region_name=os.getenv("region_name"),
+    )
+    s3_client = session.client("s3")
 
     try:
         s3_client.upload_file(out_path, s3_bucket, s3_path)
