@@ -19,15 +19,15 @@ Este projeto realiza a **ingestão diária de dados do SQL Server para o Amazon 
 ---
 
 ##  Estrutura do Projeto
-.
-├── main.py             # Script principal: orquestra a ingestão (ETL)
-├── table_reader.py     # Script auxiliar: lista tabelas do SQL Server com registros
-├── requirements.txt    # Dependências do projeto (pip install -r requirements.txt)
-├── .env                # Variáveis de ambiente (NÃO versionar no GitHub!)
-└── src/                # Pasta de saída temporária dos arquivos (CSV/Parquet)
-    └── data/
-        ├── file.csv
-        └── file.parquet
+
+- main.py → Script principal: orquestra a ingestão (ETL)
+- table_reader.py → Lista tabelas do SQL Server com registros
+- requirements.txt → Dependências do projeto
+- .env → Variáveis de ambiente (NÃO versionar no GitHub!)
+- src/
+  - data/
+    - file.csv
+    - file.parquet
 
 
 
