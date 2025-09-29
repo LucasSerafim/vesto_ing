@@ -126,6 +126,6 @@ if __name__ == "__main__":
             table_name=table,
         )
         # S3 upload - CSV or Parquet format
-        upload_file_to_s3(df, table_name=table, format="csv")
+        upload_file_to_s3(df, table_name=table, format="parquet")
 
     print("Processo de ingestão concluído.")
