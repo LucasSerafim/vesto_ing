@@ -87,7 +87,7 @@ Este projeto realiza a **ingestão diária de dados do SQL Server para o Amazon 
 
 
 
-Autor: Lucas Serafim
-Executar 1x por semana (sugestão via agendamento).
+- Autor: Lucas Serafim
+- Executar 1x por semana (sugestão via agendamento).
 
 
