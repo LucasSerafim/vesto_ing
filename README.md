@@ -261,9 +261,17 @@ Verificar em CloudWatch Logs:
 **Solução**: Verificar IAM Role do job Glue e políticas do bucket S3.
 
 
+
+
 ## Referências
 
 - [AWS Glue Documentation](https://docs.aws.amazon.com/glue/)
 - [Apache Spark SQL Guide](https://spark.apache.org/docs/latest/sql-programming-guide.html)
 - [SQL Server JDBC Driver](https://docs.microsoft.com/en-us/sql/connect/jdbc/)
 - [Apache Parquet Format](https://parquet.apache.org/documentation/latest/)
+
+
+## Autor
+
+
+- Lucas Serafim | lucas-serafim@hotmail.com | https://github.com/LucasSerafim
