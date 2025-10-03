@@ -18,6 +18,13 @@ Se o processo foi executado, por exemplo, no dia 28/09/2025, o arquivo poderá s
 `s3://dev-analytics-datamigration-bucket/bronze/vesto/ATIVIDADE/year=2025/month=09/day=28/part-*.parquet`
 
 
+## Links:
+
+- AWS ACCOUNT: [ID:195478975290](https://houpa.awsapps.com/start/)
+- S3 Bucket: [dev-analytics-datamigration-bucket](us-east-2.console.aws.amazon.com/s3/buckets/dev-analytics-datamigration-bucket?region=us-east-2#)
+- Job de ingestão [vesto_ingestion_job](https://us-east-1.console.aws.amazon.com/gluestudio/home?region=us-east-1#/editor/job/vesto_ingestion_job/script) 
+
+
 
 ## Arquitetura
 
@@ -255,7 +262,6 @@ Verificar em CloudWatch Logs:
   ]
 }
 ```
-
 
 ## Troubleshooting
 
