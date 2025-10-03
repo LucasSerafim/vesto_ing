@@ -8,6 +8,17 @@ O fluxo de dados realiza a orquestração da ingestão de tabelas de um servidor
 Todo o fluxo é executado via AWS Glue Jobs, com agendamento semanal realizado nas segundas-feiras. 
 
 O tempo de execução é de cerca de 1 hora e 30 minutos, ou seja, toda segunda-feira, o fluxo cria uma réplica da posição de cada tabela populada do sistema.
+
+
+Um exemplo prático pode ser encontrado importando uma tabela arbitrária. Vamos utilizar a tabela dbo.ATIVIDADE.
+Após a identificação dessa tabela, o script realiza um full scan, armazenando o resultado em um arquivo .parquet.
+Se o processo foi executado, por exemplo, no dia 28/09/2025, o arquivo poderá ser encontrado no seguinte caminho:
+
+
+`s3://dev-analytics-datamigration-bucket/bronze/vesto/ATIVIDADE/year=2025/month=09/day=28/part-*.parquet`
+
+
+
 ## Arquitetura
 
 ```
