@@ -245,21 +245,6 @@ Verificar em CloudWatch Logs:
 }
 ```
 
-### Para o Crawler
-
-```json
-{
-  "Effect": "Allow",
-  "Action": [
-    "s3:GetObject",
-    "s3:ListBucket",
-    "glue:UpdateDatabase",
-    "glue:UpdateTable",
-    "glue:CreateTable"
-  ],
-  "Resource": "*"
-}
-```
 
 ## Troubleshooting
 
