@@ -260,17 +260,6 @@ Verificar em CloudWatch Logs:
 
 **Solução**: Verificar IAM Role do job Glue e políticas do bucket S3.
 
-### Performance lenta
-
-**Causas possíveis**:
-- Volume de dados muito grande sem particionamento na origem
-- Número insuficiente de DPUs (Data Processing Units)
-- Rede lenta entre Glue e SQL Server
-
-**Soluções**:
-- Aumentar DPUs do job
-- Implementar filtros/predicados na query SQL
-- Usar VPC Endpoint para S3
 
 ## Referências
 
