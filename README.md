@@ -20,9 +20,9 @@ Se o processo foi executado, por exemplo, no dia 28/09/2025, o arquivo poderá s
 
 ## Links:
 
--[AWS ACCOUNT](https://houpa.awsapps.com/start/)
--[S3 Bucket](us-east-2.console.aws.amazon.com/s3/buckets/dev-analytics-datamigration-bucket?region=us-east-2#)
--[Job de ingestão](https://us-east-1.console.aws.amazon.com/gluestudio/home?region=us-east-1#/editor/job/vesto_ingestion_job/script) 
+- [AWS ACCOUNT](https://houpa.awsapps.com/start/)
+- [S3 Bucket](us-east-2.console.aws.amazon.com/s3/buckets/dev-analytics-datamigration-bucket?region=us-east-2#)
+- [Job de ingestão](https://us-east-1.console.aws.amazon.com/gluestudio/home?region=us-east-1#/editor/job/vesto_ingestion_job/script) 
 
 
 
