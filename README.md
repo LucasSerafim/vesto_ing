@@ -10,7 +10,7 @@ Todo o fluxo é executado via AWS Glue Jobs, com agendamento semanal realizado n
 O tempo de execução é de cerca de 1 hora e 30 minutos, ou seja, toda segunda-feira, o fluxo cria uma réplica da posição de cada tabela populada do sistema.
 
 
-![Desenho da arquitetura: ](C:\Projetos\vesto_ing\arquitetura.png)
+![Desenho da arquitetura: ](img\arquitetura.png)
 
 
 ### Exemplo de execução:
